@@ -282,15 +282,23 @@ jobs:
         run: |
           mkdir -p custom-files
           unzip custom-files.zip -d custom-files/
-          chmod -R 755 custom-files/
+          
+          # 显示解压后的文件结构
+          echo "Content of custom-files directory:"
+          ls -R custom-files/
           
           # 创建必要的目录
           mkdir -p imagebuilder/files/etc/init.d
           mkdir -p imagebuilder/files/usr/bin
           
-          # 复制文件
-          cp -rf custom-files/etc/* imagebuilder/files/etc/
-          cp -rf custom-files/usr/* imagebuilder/files/usr/
+          # 复制文件（添加详细输出）
+          echo "Copying files..."
+          cp -rv custom-files/etc/* imagebuilder/files/etc/ || echo "Warning: etc files copy failed"
+          cp -rv custom-files/usr/* imagebuilder/files/usr/ || echo "Warning: usr files copy failed"
+          
+          # 显示目标目录结构
+          echo "Content of imagebuilder/files directory:"
+          ls -R imagebuilder/files/
           
           # 设置 clash 相关文件的权限
           chmod 755 imagebuilder/files/etc/init.d/clash
@@ -301,7 +309,7 @@ jobs:
           cd imagebuilder/files/etc/rc.d
           ln -sf ../init.d/clash S99clash
           
-          # 显示文件权限和启用状态（用于调试）
+          # 显示文件权限和启用状态
           echo "Checking clash files permissions and enabled status:"
           ls -la imagebuilder/files/etc/init.d/clash
           ls -la imagebuilder/files/usr/bin/clash

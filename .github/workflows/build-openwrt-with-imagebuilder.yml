@@ -278,36 +278,6 @@ jobs:
           sudo chown -R runner.runner /builder
           df -Th
 
-      - name: Extract custom files
-        run: |
-          # 创建必要的目录结构
-          mkdir -p imagebuilder/files
-          
-          # 解压自定义文件
-          tar -xzf custom-files.tar.gz -C imagebuilder/files/
-          
-          # 设置正确的权限
-          chmod 755 imagebuilder/files/usr/bin/clash
-          
-          # 确保 clash 配置目录权限正确
-          chmod -R 755 imagebuilder/files/etc/clash
-          
-          # 确保配置文件权限正确
-          find imagebuilder/files/etc/clash -type f -exec chmod 644 {} \;
-          
-          # 显示文件结构以验证
-          echo "=== Checking final structure ==="
-          ls -R imagebuilder/files/
-          
-          # 验证关键文件的权限
-          echo "=== Checking key file permissions ==="
-          ls -l imagebuilder/files/usr/bin/clash
-          ls -l imagebuilder/files/etc/clash
-          
-          # 显示文件内容摘要
-          echo "=== Files content summary ==="
-          find imagebuilder/files -type f | sort
-
       - name: Build OpenWrt Rootfs [ ${{ inputs.releases_branch }} ]
         id: imagebuilder
         if: ${{ steps.init.outputs.status }} == 'success' && !cancelled()

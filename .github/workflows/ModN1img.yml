@@ -150,7 +150,7 @@ jobs:
           echo "==================== 重新压缩镜像 ===================="
           cd ..
           echo "正在压缩镜像文件..."
-          xz -8f openwrt_amlogic_s905d_k6.1.121_2024.12.26.img
+          xz -9ef openwrt_amlogic_s905d_k6.1.121_2024.12.26.img
           echo "镜像压缩完成"
           
           # 清理临时文件
@@ -160,13 +160,23 @@ jobs:
           
           echo "==================== 所有操作已完成 ===================="
 
+      - name: Generate SHA256 checksum
+        run: |
+          cd $GITHUB_WORKSPACE
+          sha256sum openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.xz > openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.xz.sha
+          
+      - name: Set date
+        run: echo "DATE=$(date +%Y.%m.%d)" >> $GITHUB_ENV
+        
       - name: Create Release
         id: create_release
         uses: ncipollo/release-action@main
         with:
-          tag: OpenWrt_s905d_${{ github.run_number }}_${{ env.DATE }} 
-          name: OpenWrt S905D Release ${{ github.run_number }}
-          artifacts: openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.xz
+          tag: OpenWrt_s905d_${{ github.run_number }}_${{ env.DATE }}
+          name: OpenWrt S905D Phicomm-N1 ${{ github.run_number }}
+          artifacts: |
+            openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.xz
+            openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.xz.sha
           allowUpdates: true
           removeArtifacts: false
           replacesArtifacts: true
@@ -179,7 +189,6 @@ jobs:
             ### 默认配置信息
             - 默认 IP: 192.168.50.252
             - 默认用户名: root
-            - 默认密码: root
             
             ### 安装说明
             1. 使用 USB 启动
@@ -192,7 +201,10 @@ jobs:
                - 选择 Install OpenWrt
             
             ### 文件校验
-            - 请使用 sha256sum 验证文件完整性
+            - 请下载 .sha 文件并使用以下命令验证：
+              ```bash
+              sha256sum -c openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.xz.sha
+              ```
             
             ### 注意事项
             - 首次使用请及时修改默认密码

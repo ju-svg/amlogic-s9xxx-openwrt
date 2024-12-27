@@ -164,7 +164,7 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@main
         with:
-          tag_name: OpenWrt_s905d_${{ github.run_number }}_${{ env.DATE }}
+          tag: OpenWrt_s905d_${{ github.run_number }}_${{ env.DATE }} 
           name: OpenWrt S905D Release ${{ github.run_number }}
           artifacts: openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.xz
           allowUpdates: true

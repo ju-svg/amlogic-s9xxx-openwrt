@@ -77,8 +77,6 @@ jobs:
           # 解压自定义文件
           echo "==================== 添加自定义文件 ===================="
           echo "正在解压 custom-files.tar.gz..."
-          echo "解压的文件列表:"
-          sudo tar -tvf ../custom-files.tar.gz
           echo "开始复制文件..."
           sudo tar -xvf ../custom-files.tar.gz -C mount_point/
           echo "自定义文件解压完成"

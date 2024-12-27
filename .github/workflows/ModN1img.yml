@@ -150,7 +150,7 @@ jobs:
           echo "==================== 重新压缩镜像 ===================="
           cd ..
           echo "正在压缩镜像文件..."
-          xz -9ef openwrt_amlogic_s905d_k6.1.121_2024.12.26.img
+          xz -8f openwrt_amlogic_s905d_k6.1.121_2024.12.26.img
           echo "镜像压缩完成"
           
           # 清理临时文件
@@ -162,12 +162,40 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: softprops/action-gh-release@v1
+        uses: ncipollo/release-action@main
         with:
-          tag_name: release-${{ github.run_number }}
-          name: Release ${{ github.run_number }}
-          files: openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.gz
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: OpenWrt_s905d_${{ github.run_number }}_${{ env.DATE }}
+          name: OpenWrt S905D Release ${{ github.run_number }}
+          artifacts: openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.xz
+          allowUpdates: true
+          removeArtifacts: false
+          replacesArtifacts: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: |
+            ### OpenWrt for Amlogic S905D Phicomm-N1
+            - 内核版本：6.1.121
+            - 编译日期：2024.12.26
+            
+            ### 默认配置信息
+            - 默认 IP: 192.168.50.252
+            - 默认用户名: root
+            - 默认密码: root
+            
+            ### 安装说明
+            1. 使用 USB 启动
+               - 将固件写入 USB 设备
+               - 插入设备并启动
+            
+            2. 安装到 EMMC（推荐）
+               - 登录 OpenWrt
+               - 进入 System → Amlogic Service
+               - 选择 Install OpenWrt
+            
+            ### 文件校验
+            - 请使用 sha256sum 验证文件完整性
+            
+            ### 注意事项
+            - 首次使用请及时修改默认密码
+            - 建议安装到 EMMC 以获得更好的性能
+            
+            _发布时间：${{ env.DATE }}_

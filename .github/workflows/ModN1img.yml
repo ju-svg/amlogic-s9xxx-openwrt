@@ -150,7 +150,7 @@ jobs:
           echo "==================== 重新压缩镜像 ===================="
           cd ..
           echo "正在压缩镜像文件..."
-          gzip -f openwrt_amlogic_s905d_k6.1.121_2024.12.26.img
+          xz -9ef openwrt_amlogic_s905d_k6.1.121_2024.12.26.img
           echo "镜像压缩完成"
           
           # 清理临时文件

@@ -84,45 +84,68 @@ jobs:
           # 删除不需要的文件
           echo "==================== 删除不需要的文件 ===================="
           echo "正在删除无用的固件文件..."
-          sudo rm -f mount_point/lib/firmware/ath10k/QCA4019/hw1.0/board-2.bin \
-                    mount_point/lib/firmware/ath10k/WCN3990/hw1.0/wlanmdsp.mbn \
-                    mount_point/lib/firmware/ath11k/WCN6855/hw2.0/amss.bin \
-                    mount_point/lib/firmware/ath11k/WCN6855/hw2.0/board-2.bin \
-                    mount_point/lib/firmware/mediatek/mt7915_wm.bin \
-                    mount_point/lib/firmware/mediatek/mt7916_wm.bin \
-                    mount_point/lib/firmware/mediatek/mt7986_wm.bin \
-                    mount_point/lib/firmware/mediatek/mt7986_wm_mt7975.bin \
-                    mount_point/lib/firmware/mediatek/mt8173/vpu_d.bin \
-                    mount_point/lib/firmware/mediatek/mt8183/scp.img \
-                    mount_point/lib/firmware/rtw89/rtw8852a_fw.bin \
-                    mount_point/lib/firmware/rtw89/rtw8852c_fw.bin \
-                    mount_point/lib/firmware/uwe5622/wcnmodem-38222.bin
+          
+          # 固件文件删除
+          for file in \
+              "mount_point/lib/firmware/ath10k/QCA4019/hw1.0/board-2.bin" \
+              "mount_point/lib/firmware/ath10k/WCN3990/hw1.0/wlanmdsp.mbn" \
+              "mount_point/lib/firmware/ath11k/WCN6855/hw2.0/amss.bin" \
+              "mount_point/lib/firmware/ath11k/WCN6855/hw2.0/board-2.bin" \
+              "mount_point/lib/firmware/mediatek/mt7915_wm.bin" \
+              "mount_point/lib/firmware/mediatek/mt7916_wm.bin" \
+              "mount_point/lib/firmware/mediatek/mt7986_wm.bin" \
+              "mount_point/lib/firmware/mediatek/mt7986_wm_mt7975.bin" \
+              "mount_point/lib/firmware/mediatek/mt8173/vpu_d.bin" \
+              "mount_point/lib/firmware/mediatek/mt8183/scp.img" \
+              "mount_point/lib/firmware/rtw89/rtw8852a_fw.bin" \
+              "mount_point/lib/firmware/rtw89/rtw8852c_fw.bin" \
+              "mount_point/lib/firmware/uwe5622/wcnmodem-38222.bin"
+          do
+              if [ -f "$file" ]; then
+                  echo "删除文件: $file"
+                  sudo rm -f "$file"
+              fi
+          done
 
           echo "正在删除无用的模块配置..."
-          sudo rm -f mount_point/etc/modules.d/ath10k \
-                    mount_point/etc/modules.d/ath10k-pci \
-                    mount_point/etc/modules.d/ath10k_core \
-                    mount_point/etc/modules.d/ath10k_sdio \
-                    mount_point/etc/modules.d/ath10k_usb \
-                    mount_point/etc/modules.d/mt7915e
+          for file in \
+              "mount_point/etc/modules.d/ath10k" \
+              "mount_point/etc/modules.d/ath10k-pci" \
+              "mount_point/etc/modules.d/ath10k_core" \
+              "mount_point/etc/modules.d/ath10k_sdio" \
+              "mount_point/etc/modules.d/ath10k_usb" \
+              "mount_point/etc/modules.d/mt7915e"
+          do
+              if [ -f "$file" ]; then
+                  echo "删除模块配置: $file"
+                  sudo rm -f "$file"
+              fi
+          done
 
           echo "正在删除无用的 u-boot 文件..."
-          sudo rm -f mount_point/lib/u-boot/bl-fake-octopus-planet.bin \
-                    mount_point/lib/u-boot/e900v22c-u-boot.bin.sd.bin \
-                    mount_point/lib/u-boot/gtking-u-boot.bin.sd.bin \
-                    mount_point/lib/u-boot/gtkingpro-u-boot.bin.sd.bin \
-                    mount_point/lib/u-boot/h96maxx3-u-boot.bin.sd.bin \
-                    mount_point/lib/u-boot/hk1box-bootloader.img \
-                    mount_point/lib/u-boot/hk1box-u-boot.bin.sd.bin \
-                    mount_point/lib/u-boot/khadas-vim3-u-boot.sd.bin \
-                    mount_point/lib/u-boot/odroid-n2-u-boot.bin.sd.bin \
-                    mount_point/lib/u-boot/r3300l-u-boot.bin.sd.bin \
-                    mount_point/lib/u-boot/skyworth-lb2004-bootloader.img \
-                    mount_point/lib/u-boot/skyworth-lb2004-u-boot.bin.sd.bin \
-                    mount_point/lib/u-boot/ugoos-x3-u-boot.bin.sd.bin \
-                    mount_point/lib/u-boot/x88prox3-u-boot.bin.sd.bin \
-                    mount_point/lib/u-boot/x96max-u-boot.bin.sd.bin \
-                    mount_point/lib/u-boot/x96maxplus-u-boot.bin.sd.bin
+          for file in \
+              "mount_point/lib/u-boot/bl-fake-octopus-planet.bin" \
+              "mount_point/lib/u-boot/e900v22c-u-boot.bin.sd.bin" \
+              "mount_point/lib/u-boot/gtking-u-boot.bin.sd.bin" \
+              "mount_point/lib/u-boot/gtkingpro-u-boot.bin.sd.bin" \
+              "mount_point/lib/u-boot/h96maxx3-u-boot.bin.sd.bin" \
+              "mount_point/lib/u-boot/hk1box-bootloader.img" \
+              "mount_point/lib/u-boot/hk1box-u-boot.bin.sd.bin" \
+              "mount_point/lib/u-boot/khadas-vim3-u-boot.sd.bin" \
+              "mount_point/lib/u-boot/odroid-n2-u-boot.bin.sd.bin" \
+              "mount_point/lib/u-boot/r3300l-u-boot.bin.sd.bin" \
+              "mount_point/lib/u-boot/skyworth-lb2004-bootloader.img" \
+              "mount_point/lib/u-boot/skyworth-lb2004-u-boot.bin.sd.bin" \
+              "mount_point/lib/u-boot/ugoos-x3-u-boot.bin.sd.bin" \
+              "mount_point/lib/u-boot/x88prox3-u-boot.bin.sd.bin" \
+              "mount_point/lib/u-boot/x96max-u-boot.bin.sd.bin" \
+              "mount_point/lib/u-boot/x96maxplus-u-boot.bin.sd.bin"
+          do
+              if [ -f "$file" ]; then
+                  echo "删除 u-boot 文件: $file"
+                  sudo rm -f "$file"
+              fi
+          done
 
           echo "文件清理完成"
           

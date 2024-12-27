@@ -80,130 +80,7 @@ jobs:
           echo "开始复制文件..."
           sudo tar -xvf ../custom-files.tar.gz -C mount_point/
           echo "自定义文件解压完成"
-
-          # 删除不需要的文件
-          echo "==================== 删除不需要的文件 ===================="
-          echo "正在删除无用的固件文件..."
-          
-          # 固件文件删除
-          for file in \
-              "mount_point/lib/firmware/ath10k/QCA4019/hw1.0/board-2.bin" \
-              "mount_point/lib/firmware/ath10k/WCN3990/hw1.0/wlanmdsp.mbn" \
-              "mount_point/lib/firmware/ath11k/WCN6855/hw2.0/amss.bin" \
-              "mount_point/lib/firmware/ath11k/WCN6855/hw2.0/board-2.bin" \
-              "mount_point/lib/firmware/mediatek/mt7915_wm.bin" \
-              "mount_point/lib/firmware/mediatek/mt7916_wm.bin" \
-              "mount_point/lib/firmware/mediatek/mt7986_wm.bin" \
-              "mount_point/lib/firmware/mediatek/mt7986_wm_mt7975.bin" \
-              "mount_point/lib/firmware/mediatek/mt8173/vpu_d.bin" \
-              "mount_point/lib/firmware/mediatek/mt8183/scp.img" \
-              "mount_point/lib/firmware/rtw89/rtw8852a_fw.bin" \
-              "mount_point/lib/firmware/rtw89/rtw8852c_fw.bin" \
-              "mount_point/lib/firmware/uwe5622/wcnmodem-38222.bin"
-          do
-              if [ -f "$file" ]; then
-                  echo "删除文件: $file"
-                  sudo rm -f "$file"
-              fi
-          done
-
-          echo "正在删除无用的模块配置..."
-          for file in \
-              "mount_point/etc/modules.d/ath10k" \
-              "mount_point/etc/modules.d/ath10k-pci" \
-              "mount_point/etc/modules.d/ath10k_core" \
-              "mount_point/etc/modules.d/ath10k_sdio" \
-              "mount_point/etc/modules.d/ath10k_usb" \
-              "mount_point/etc/modules.d/mt7915e"
-          do
-              if [ -f "$file" ]; then
-                  echo "删除模块配置: $file"
-                  sudo rm -f "$file"
-              fi
-          done
-
-          echo "正在删除无用的 u-boot 文件..."
-          for file in \
-              "mount_point/lib/u-boot/bl-fake-octopus-planet.bin" \
-              "mount_point/lib/u-boot/e900v22c-u-boot.bin.sd.bin" \
-              "mount_point/lib/u-boot/gtking-u-boot.bin.sd.bin" \
-              "mount_point/lib/u-boot/gtkingpro-u-boot.bin.sd.bin" \
-              "mount_point/lib/u-boot/h96maxx3-u-boot.bin.sd.bin" \
-              "mount_point/lib/u-boot/hk1box-bootloader.img" \
-              "mount_point/lib/u-boot/hk1box-u-boot.bin.sd.bin" \
-              "mount_point/lib/u-boot/khadas-vim3-u-boot.sd.bin" \
-              "mount_point/lib/u-boot/odroid-n2-u-boot.bin.sd.bin" \
-              "mount_point/lib/u-boot/r3300l-u-boot.bin.sd.bin" \
-              "mount_point/lib/u-boot/skyworth-lb2004-bootloader.img" \
-              "mount_point/lib/u-boot/skyworth-lb2004-u-boot.bin.sd.bin" \
-              "mount_point/lib/u-boot/ugoos-x3-u-boot.bin.sd.bin" \
-              "mount_point/lib/u-boot/x88prox3-u-boot.bin.sd.bin" \
-              "mount_point/lib/u-boot/x96max-u-boot.bin.sd.bin" \
-              "mount_point/lib/u-boot/x96maxplus-u-boot.bin.sd.bin"
-          do
-              if [ -f "$file" ]; then
-                  echo "删除 u-boot 文件: $file"
-                  sudo rm -f "$file"
-              fi
-          done
-
-          echo "文件清理完成"
-
-          # 删除文件后执行文件系统压缩
-          echo "==================== 压缩文件系统 ===================="
-          echo "正在执行文件系统压缩..."
-          
-          # 确保所有写操作已完成
-          sync
-          
-          # 卸载分区
-          sudo umount mount_point
-          
-          # 对 BTRFS 文件系统进行检查和压缩
-          echo "检查 BTRFS 文件系统..."
-          sudo btrfs check "${LOOP_DEV}p2"
-          
-          echo "执行 BTRFS 平衡操作..."
-          sudo mount "${LOOP_DEV}p2" mount_point
-          sudo btrfs balance start -dusage=0 mount_point
-          
-          echo "执行 BTRFS 碎片整理..."
-          sudo btrfs filesystem defragment -r mount_point
-          
-          echo "执行 BTRFS 空间回收..."
-          sudo btrfs filesystem resize max mount_point
-          
-          # 确保所有操作完成
-          sync
-          
-          echo "文件系统压缩完成"
-
-
-          
-          # 验证关键文件
-          echo "==================== 验证关键文件 ===================="
-          echo "检查 clash 相关文件..."
-          if [ -f "mount_point/usr/bin/clash" ]; then
-            echo "clash 二进制文件: $(ls -l mount_point/usr/bin/clash)"
-          else
-            echo "警告: clash 二进制文件不存在"
-          fi
-          
-          if [ -f "mount_point/etc/init.d/clash" ]; then
-            echo "clash 启动脚本: $(ls -l mount_point/etc/init.d/clash)"
-            echo "启动脚本内容:"
-            sudo cat mount_point/etc/init.d/clash
-          else
-            echo "警告: clash 启动脚本不存在"
-          fi
-          
-          if [ -d "mount_point/etc/clash" ]; then
-            echo "clash 配置目录内容:"
-            sudo ls -lR mount_point/etc/clash
-          else
-            echo "警告: clash 配置目录不存在"
-          fi
-          
+                    
           # 设置文件权限
           echo "==================== 设置文件权限 ===================="
           if [ -f "mount_point/usr/bin/clash" ]; then
@@ -271,8 +148,8 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@main
         with:
-          tag: OpenWrt_s905d_${{ github.run_number }}_${{ env.DATE }}
-          name: OpenWrt S905D Phicomm-N1 ${{ github.run_number }}
+          tag: OpenWrt_s905d_${{ env.RELEASES_TAG }}_${{ env.PACKAGED_OUTPUTDATE }}
+          name: OpenWrt S905D Phicomm-N1 ${{ env.PACKAGED_OUTPUTDATE }}
           artifacts: |
             openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.xz
             openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.xz.sha

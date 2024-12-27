@@ -148,6 +148,30 @@ jobs:
           done
 
           echo "文件清理完成"
+
+                    # 删除文件后执行文件系统压缩
+          echo "==================== 压缩文件系统 ===================="
+          echo "正在执行文件系统压缩..."
+          
+          # 确保所有写操作已完成
+          sync
+          
+          # 卸载分区
+          sudo umount mount_point
+          
+          # 检查和修复文件系统
+          sudo e2fsck -f "${LOOP_DEV}p2"
+          
+          # 压缩文件系统到最小大小
+          echo "正在压缩文件系统..."
+          sudo resize2fs -M "${LOOP_DEV}p2"
+          
+          # 获取新的文件系统大小
+          NEW_FS_SIZE=$(sudo resize2fs -P "${LOOP_DEV}p2" | awk '{print $NF}')
+          echo "新的文件系统大小: ${NEW_FS_SIZE} 个块"
+          
+          # 重新挂载分区以继续后续操作
+          sudo mount "${LOOP_DEV}p2" mount_point
           
           # 验证关键文件
           echo "==================== 验证关键文件 ===================="

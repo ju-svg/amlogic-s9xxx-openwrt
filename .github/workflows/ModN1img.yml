@@ -30,7 +30,7 @@ jobs:
           
           # 下载镜像文件
           echo "正在下载 OpenWrt 镜像文件..."
-          wget -q --show-progress https://github.com/ju-svg/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_23.05.5_12.26.1248/openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.gz
+          wget -q --show-progress https://github.com/ju-svg/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_23.05.5_12.25.1023/openwrt_amlogic_s905d_k6.1.121_2024.12.25.img.gz
           echo "镜像下载完成"
           
           # 创建工作目录
@@ -42,7 +42,7 @@ jobs:
           
           # 解压 .gz 镜像
           echo "正在解压镜像文件..."
-          gzip -d ../openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.gz
+          gzip -d ../openwrt_amlogic_s905d_k6.1.121_2024.12.25.img.gz
           echo "镜像解压完成"
           
           # 创建挂载点
@@ -52,12 +52,12 @@ jobs:
           
           # 获取分区信息
           echo "==================== 分区信息 ===================="
-          fdisk -l ../openwrt_amlogic_s905d_k6.1.121_2024.12.26.img
+          fdisk -l ../openwrt_amlogic_s905d_k6.1.121_2024.12.25.img
           
           # 使用 losetup 设置循环设备
           echo "设置循环设备..."
           LOOP_DEV=$(sudo losetup -f)
-          sudo losetup "$LOOP_DEV" ../openwrt_amlogic_s905d_k6.1.121_2024.12.26.img
+          sudo losetup "$LOOP_DEV" ../openwrt_amlogic_s905d_k6.1.121_2024.12.25.img
           echo "循环设备设置完成: $LOOP_DEV"
           
           # 扫描分区表
@@ -126,7 +126,7 @@ jobs:
           echo "==================== 重新压缩镜像 ===================="
           cd ..
           echo "正在压缩镜像文件..."
-          xz -9ef openwrt_amlogic_s905d_k6.1.121_2024.12.26.img
+          xz -9ef openwrt_amlogic_s905d_k6.1.121_2024.12.25.img
           echo "镜像压缩完成"
           
           # 清理临时文件
@@ -139,7 +139,7 @@ jobs:
       - name: Generate SHA256 checksum
         run: |
           cd $GITHUB_WORKSPACE
-          sha256sum openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.xz > openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.xz.sha
+          sha256sum openwrt_amlogic_s905d_k6.1.121_2024.12.25.img.xz > openwrt_amlogic_s905d_k6.1.121_2024.12.25.img.xz.sha
           
       - name: Set date
         run: echo "DATE=$(date +%Y.%m.%d)" >> $GITHUB_ENV
@@ -149,10 +149,10 @@ jobs:
         uses: ncipollo/release-action@main
         with:
           tag: OpenWrt_s905d_${{ env.RELEASES_TAG }}_${{ env.PACKAGED_OUTPUTDATE }}
-          name: OpenWrt S905D Phicomm-N1 ${{ env.PACKAGED_OUTPUTDATE }}
+          name: OpenWrt 23.05.5 Phicomm-N1 ${{ env.DATE }}
           artifacts: |
-            openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.xz
-            openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.xz.sha
+            openwrt_amlogic_s905d_k6.1.121_2024.12.25.img.xz
+            openwrt_amlogic_s905d_k6.1.121_2024.12.25.img.xz.sha
           allowUpdates: true
           removeArtifacts: false
           replacesArtifacts: true
@@ -174,14 +174,8 @@ jobs:
             2. 安装到 EMMC（推荐）
                - 登录 OpenWrt
                - 进入 System → Amlogic Service
-               - 选择 Install OpenWrt
-            
-            ### 文件校验
-            - 请下载 .sha 文件并使用以下命令验证：
-              ```bash
-              sha256sum -c openwrt_amlogic_s905d_k6.1.121_2024.12.26.img.xz.sha
-              ```
-            
+               - 选择 Install OpenWrt          
+          
             ### 注意事项
             - 首次使用请及时修改默认密码
             - 建议安装到 EMMC 以获得更好的性能

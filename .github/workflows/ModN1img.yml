@@ -159,19 +159,25 @@ jobs:
           # 卸载分区
           sudo umount mount_point
           
-          # 检查和修复文件系统（添加 -y 参数自动回答 yes）
-          sudo e2fsck -f -y "${LOOP_DEV}p2"
+          # 对 BTRFS 文件系统进行检查和压缩
+          echo "检查 BTRFS 文件系统..."
+          sudo btrfs check "${LOOP_DEV}p2"
           
-          # 压缩文件系统到最小大小
-          echo "正在压缩文件系统..."
-          sudo resize2fs -M "${LOOP_DEV}p2"
-          
-          # 获取新的文件系统大小
-          NEW_FS_SIZE=$(sudo resize2fs -P "${LOOP_DEV}p2" | awk '{print $NF}')
-          echo "新的文件系统大小: ${NEW_FS_SIZE} 个块"
-          
-          # 重新挂载分区以继续后续操作
+          echo "执行 BTRFS 平衡操作..."
           sudo mount "${LOOP_DEV}p2" mount_point
+          sudo btrfs balance start -dusage=0 mount_point
+          
+          echo "执行 BTRFS 碎片整理..."
+          sudo btrfs filesystem defragment -r mount_point
+          
+          echo "执行 BTRFS 空间回收..."
+          sudo btrfs filesystem resize max mount_point
+          
+          # 确保所有操作完成
+          sync
+          
+          echo "文件系统压缩完成"
+
 
           
           # 验证关键文件
